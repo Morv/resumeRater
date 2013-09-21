@@ -24,13 +24,11 @@ You are to turn in your design tool, your input file, your sample resume.txt, an
 #define flush fflush (stdin)
 
 // FUNCTION PROTOTYPES
-void checkForMatch (char a[], char b[], int *score);
-
 
 main () {
 	FILE *pKeyFile,*pResumeFile;
-	char keyword[51], resWord[51], testA[51], testB[51];
-	int score = 0, a = 0, b = 0;
+	char keyword[51], resWord[51];
+	int score = 0;
 
 	pKeyFile = fopen("keywords.txt", "r");
 
@@ -39,12 +37,12 @@ main () {
 		exit (-1);
 	} //end NULL check
 
+
 	while (!feof(pKeyFile)) //Keep going until the EOF.
 	{
 		
-		fscanf(pKeyFile,"%[^,],", keyword); //reads file until comma is reached. goes to the next word
-		printf("Keyword: %s\n", keyword); //prints out every keword
-		pause;
+		fscanf(pKeyFile,"%[^,], ", keyword); //reads file until comma is reached. Then skips a space, and goes to the next word.
+		printf("Searching for: %s\n", keyword); //prints out every keword before it searches for it in the resume.
 			
 		pResumeFile = fopen("resume.txt", "r");//open resume file
 
@@ -53,20 +51,14 @@ main () {
 			exit(-1);
 		}//end NULL check
 
-		while (!feof(pResumeFile)) //Keep going until the EOF.
-		{
-		fscanf(pResumeFile,"%s", resWord); //reads file until comma is reached. goes to the next word
-		printf("Resume Word: %s\n", resWord); //prints out every word in the resume in a list
+			while (!feof(pResumeFile)) //Keep going until the EOF.
+			{
+			fscanf(pResumeFile,"%s", resWord); //reads every word in the resume
 
-		//if (strcmp(keyword, resWord) == 0) { score++; } //can be used instead of checkForMatch
-		checkForMatch(keyword, resWord, &score);
-
-		}//end while
-
-
-
+			if (strcmp(keyword, resWord) == 0) { score++; } //can be used instead of checkForMatch
+			}//end while
 	}//end big while
-
+	 pause;
 	 cls;
 	 printf("Your resume score is: %i", score);
 	 pause; 
@@ -75,14 +67,3 @@ main () {
 	fclose(pResumeFile);
 } //end of main
 
-void checkForMatch (char a[], char b[], int *score){
-
-	printf("%s compared to %s\n\n\n", a, b);
-
-
-	if (strcmp(a, b) == 0) {
-		*score += 1;
-		printf("Match! score:%i\n\n", *score);
-	}//end compare;
-
-} //end checkForMatch
