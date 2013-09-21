@@ -60,7 +60,7 @@ main () {
 	}//end big while
 	 pause;
 	 cls;
-	 printf("Your resume score is: %i", score);
+	 printf("Resume score: %i\n", score);
 	 pause; 
 
 	fclose(pKeyFile);
