@@ -35,11 +35,8 @@ main () {
 		exit (-1);
 	}
 
-	while (!feof(pKeyFile))
+	while (!feof(pKeyFile)) // Keep going until EOF
 	{
-		//fgets(keyword, 51, pKeyFile);
-
-
 		fscanf(pKeyFile,"%[^,],", keyword); //reads file until comma is reached. goes to the next word
 		printf("Keyword: %s\n", keyword);
 		pause;
