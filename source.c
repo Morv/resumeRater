@@ -1,20 +1,13 @@
-/****************************************************
-Written by: Morvan Perez
-Date Written: Sept 20, 2013
-Purpose: Assignment 5: Resume Rater
-
-Write a resume scanning simulator.  You are to write a program that will read in 
-a resume (you can assume that the document is located with the source file and it is 
-named resume.txt (make this up).
-
-Your program will read in a text file that contains KEYWORDS from zero to 50 keywords (make this up). 
-in the file will be separated by commas.  No keyword will contain a comma.  You are to count
-the total times the keywords are found in the fake resume.  Your program will simply output
-to the screen the count of keywords with in the document.  In real life the higher the number
-the higher the chance that the person (the owner of the resume) will get an interview.
-
-You are to turn in your design tool, your input file, your sample resume.txt, and your source file.
-****************************************************/
+/******************************************************************************
+*********                Written by: Morvan Perez           *******************
+*********               Date Written: Sept 22, 2013         *******************
+*********           Purpose: Assignment 5: Resume Rater     *******************
+*******************************************************************************
+* This program reads in keywords from the comma delimited file, keywords.txt, *
+*                the keywords are compared to the words in resume.txt		  *
+*       and outputs how many times the keywords appear in the resume file.    *
+*                        Keywords are case sensitive.                         *
+*******************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,8 +22,8 @@ void removePunctuation (char a[]);
 
 main () {
 	FILE *pKeyFile,*pResumeFile;
-	char keyword[51], resWord[51];
-	int score = 0;
+	char keyword[21], resWord[81];//max 20 characters for keyword, max 80 characters for resume word (for long emails addresses)
+	int score = 0, unique = 0, test = 0;
 
 	pKeyFile = fopen("keywords.txt", "r");
 
@@ -42,30 +35,42 @@ main () {
 
 	while (!feof(pKeyFile)) //Keep going until the EOF.
 	{
-		
+		if (score > test){ 
+			unique++; 
+		} //if a keyword has been found, add 1 to the number of unique keywords in the resume.
+
+		test = score; //resets for the if statement to check if it will increase (find a match).
+
 		fscanf(pKeyFile,"%[^,], ", keyword); //reads file until comma is reached. Then skips a space, and goes to the next word.
 		printf("Searching for: %s\n", keyword); //prints out every keword before it searches for it in the resume.
 			
 		pResumeFile = fopen("resume.txt", "r");//open resume file
 
-		if (pResumeFile == NULL){
-			printf("Error opening resume.txt. Program exiting\n");
-			pause;
-			exit(-1);
-		}//end NULL check
-
-			while (!feof(pResumeFile)) //Keep going until the EOF.
-			{
-			fscanf(pResumeFile,"%s", resWord); //reads every word in the resume
+			if (pResumeFile == NULL){
+				printf("Error opening resume.txt. Program exiting\n");
+				pause;
+				exit(-1);
+			}//end NULL check
+	
+				while (!feof(pResumeFile)) //Keep going until the EOF.
+				{
+				fscanf(pResumeFile,"%s", resWord); //reads every word in the resume
+				
+				removePunctuation (resWord);
 			
-			removePunctuation (resWord);
-
-			if (strcmp(keyword, resWord) == 0) { score++; } 
-
-			}//end while
+				if (strcmp(keyword, resWord) == 0) {
+					score++; 
+				} //if the keyword matches the word in the resume, add 1 to the word count.
+	
+				}//end while
 	}//end big while
 	 cls;
-	 printf("Resume score: %i\n", score);
+	 printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	 printf("~~~~~~~~~~~~~~ R E S U L T S ~~~~~~~~~~~~~~\n");
+	 printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	 printf("Unique keywords found: %i\n", unique);
+	 printf("Total number of matches: %i\n", score);
+	 printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	 pause; 
 	fclose(pKeyFile);
 	fclose(pResumeFile);
