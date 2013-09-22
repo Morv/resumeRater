@@ -23,7 +23,9 @@ You are to turn in your design tool, your input file, your sample resume.txt, an
 #define cls system ("cls")
 #define flush fflush (stdin)
 
+
 // FUNCTION PROTOTYPES
+void removePunctuation (char a[]);
 
 main () {
 	FILE *pKeyFile,*pResumeFile;
@@ -48,22 +50,44 @@ main () {
 
 		if (pResumeFile == NULL){
 			printf("Error opening resume.txt. Program exiting\n");
+			pause;
 			exit(-1);
 		}//end NULL check
 
 			while (!feof(pResumeFile)) //Keep going until the EOF.
 			{
 			fscanf(pResumeFile,"%s", resWord); //reads every word in the resume
+			
+			removePunctuation (resWord);
 
-			if (strcmp(keyword, resWord) == 0) { score++; } //can be used instead of checkForMatch
+			if (strcmp(keyword, resWord) == 0) { score++; } 
+
 			}//end while
 	}//end big while
-	 pause;
 	 cls;
 	 printf("Resume score: %i\n", score);
 	 pause; 
-
 	fclose(pKeyFile);
 	fclose(pResumeFile);
 } //end of main
 
+void removePunctuation (char a[]){
+
+	int length = strlen(a);
+
+	if ( (a[length-1] >= 65 && a[length-1] <= 90) || (a[length-1] >= 97 && a[length-1] <= 122)) //if the last character of the word is "A-Z" or "a-z"
+	{
+		return;//The word does not have punctuation, I don't need to be in this function!
+	}else{
+		while ((a[length-1] < 65 ) || ( a[length-1] >= 91) && (a[length-1] <= 96) || (a[length-1] >= 123)) //while the last character of the word is not a letter
+		{		
+			if (length == 0)
+			{
+				return; //the first character is not a letter.
+			} else {
+			a[length-1] = '\0'; //make the last character null
+			length--; //set your focus on the character before the one you just changed to null.
+			}//end if-else
+		}//end while
+	}//end big if-else
+}//punctuation removal complete
